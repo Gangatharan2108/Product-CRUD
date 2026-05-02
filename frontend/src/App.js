@@ -75,12 +75,26 @@ const TABS = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("categories");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const active = TABS.find((t) => t.key === activeTab);
+
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    setSidebarOpen(false);
+  };
 
   return (
     <div className="app-shell">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="sidebar">
+      <aside className={`sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-brand">
           <div className="brand-icon">
             <svg
@@ -110,7 +124,7 @@ export default function App() {
               <button
                 key={tab.key}
                 className={`nav-item ${isActive ? "active" : ""}`}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
               >
                 <span className={`nav-icon-wrap ${isActive ? "active" : ""}`}>
                   <tab.Icon />
@@ -143,6 +157,14 @@ export default function App() {
         {/* Top Bar */}
         <header className="topbar">
           <div className="topbar-left">
+            <button
+              className="hamburger-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
             <h1 className="page-title">{active.label}</h1>
             <span className="page-breadcrumb">Dashboard / {active.label}</span>
           </div>
